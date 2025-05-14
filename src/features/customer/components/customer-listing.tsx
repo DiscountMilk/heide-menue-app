@@ -1,7 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
-
-import { Customer } from '@/constants/data';
 import { searchParamsCache } from '@/lib/searchparams';
 import { CustomerTable } from './customer-tables';
 import { columns } from './customer-tables/columns';
@@ -13,10 +11,10 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
   const supabase = createClient(cookieStore);
 
   // Get search params
-  const pageParam = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
-  const pageLimitParam = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+  const pageParam = searchParamsCache.get('page' as string);
+  const search = searchParamsCache.get('name' as string);
+  const pageLimitParam = searchParamsCache.get('perPage' as string);
+  const categories = searchParamsCache.get('category' as string);
 
   // Parse pagination parameters with defaults
   const page = pageParam ? parseInt(pageParam) : 1;
