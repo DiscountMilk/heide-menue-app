@@ -6,51 +6,37 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 const salesData = [
-  {
-    name: 'Olivia Martin',
-    email: 'olivia.martin@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/1.png',
-    fallback: 'OM',
-    amount: '+$1,999.00'
-  },
-  {
-    name: 'Jackson Lee',
-    email: 'jackson.lee@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/2.png',
-    fallback: 'JL',
-    amount: '+$39.00'
-  },
-  {
-    name: 'Isabella Nguyen',
-    email: 'isabella.nguyen@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/3.png',
-    fallback: 'IN',
-    amount: '+$299.00'
-  },
-  {
-    name: 'William Kim',
-    email: 'will@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/4.png',
-    fallback: 'WK',
-    amount: '+$99.00'
-  },
-  {
-    name: 'Sofia Davis',
-    email: 'sofia.davis@email.com',
-    avatar: 'https://api.slingacademy.com/public/sample-users/5.png',
-    fallback: 'SD',
-    amount: '+$39.00'
-  }
+  // your existing sales data
 ];
 
-export function RecentSales() {
+export async function RecentSales() {
+  // Remove the await before cookies()
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  // Fetch all data from the customer table
+  const { data: customers, error } = await supabase
+    .from('customer')
+    .select('*');
+
+  // Log the error if there's any issue with the query
+  if (error) {
+    console.error('Error fetching customer data:', error);
+  }
+
   return (
     <Card className='h-full'>
       <CardHeader>
         <CardTitle>Recent Sales</CardTitle>
-        <CardDescription>You made 265 sales this month.</CardDescription>
+        <CardDescription>
+          {customers && customers.length > 0
+            ? JSON.stringify(customers)
+            : 'No customer data available'}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className='space-y-8'>

@@ -26,11 +26,15 @@ export const columns: ColumnDef<Customer>[] = [
     header: 'ADRESSE'
   },
   {
+    accessorKey: 'id',
+    header: 'ID'
+  },
+  {
     accessorKey: 'phone',
     header: 'TELEFONNUMMER'
   },
   {
-    accessorKey: 'payment_method',
+    accessorKey: 'method',
     header: 'BEZAHLMETHODE'
   },
 

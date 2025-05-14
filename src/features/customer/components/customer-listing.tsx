@@ -1,5 +1,7 @@
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
+
 import { Customer } from '@/constants/data';
-import { fakeDatabase } from '@/constants/mock-api';
 import { searchParamsCache } from '@/lib/searchparams';
 import { CustomerTable } from './customer-tables';
 import { columns } from './customer-tables/columns';
@@ -7,27 +9,54 @@ import { columns } from './customer-tables/columns';
 type CustomerListingPage = {};
 
 export default async function CustomerListingPage({}: CustomerListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  // Get search params
+  const pageParam = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
-  const pageLimit = searchParamsCache.get('perPage');
+  const pageLimitParam = searchParamsCache.get('perPage');
   const categories = searchParamsCache.get('category');
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(categories && { categories: categories })
-  };
+  // Parse pagination parameters with defaults
+  const page = pageParam ? parseInt(pageParam) : 1;
+  const limit = pageLimitParam ? parseInt(pageLimitParam) : 10;
 
-  const data = await fakeDatabase.getPaginatedCustomers(filters);
-  const totalCustomer = data.total_customers;
-  const customers: Customer[] = data.customers;
+  // Calculate offset for pagination
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  // Start building the query
+  let query = supabase
+    .from('customer')
+    .select('*, payment_methods(method)', { count: 'exact' });
+
+  // Add search filter if provided
+  if (search) {
+    query = query.or(
+      `name.ilike.%${search}%, adress.ilike.%${search}%, phone.ilike.%${search}%, id.ilike.%${search}%`
+    );
+  }
+
+  // Add category filter if provided
+  if (categories) {
+    query = query.eq('category', categories);
+  }
+
+  // Add pagination
+  query = query.range(from, to);
+
+  // Execute the query
+  const { data: customers, count: totalCustomer, error } = await query;
+
+  if (error) {
+    console.error('Error fetching customers:', error);
+  }
 
   return (
     <CustomerTable
-      data={customers}
-      totalItems={totalCustomer}
+      data={customers || []}
+      totalItems={totalCustomer || 0}
       columns={columns}
     />
   );
