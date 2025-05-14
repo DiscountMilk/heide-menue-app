@@ -340,19 +340,6 @@ export const fakeDatabase = {
     return this.orders.filter((order) => order.customer_id === customerId);
   },
 
-  // Get all products for a specific order
-  async getProductsByOrderId(orderId: number) {
-    await delay(500); // Simulate delay
-    const order = this.orders.find((o) => o.id === orderId);
-    if (!order) {
-      return [];
-    }
-
-    return this.products.filter((product) =>
-      order.product_id.includes(product.id)
-    );
-  },
-
   // Get all products with optional search and category filtering
   async getProducts({
     search,
