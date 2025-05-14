@@ -1,6 +1,5 @@
 'use client';
 
-import { FileUploader } from '@/components/file-uploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -27,10 +26,10 @@ import * as z from 'zod';
 
 const formSchema = z.object({
   date_delivery: z.string(),
-  customer_id: z.string(),
+  customer_id: z.number(),
   amount: z.number().min(1),
   additional_info: z.string().optional(),
-  product_id: z.string()
+  product_id: z.number()
 });
 
 export default function OrderForm({
@@ -44,10 +43,10 @@ export default function OrderForm({
     date_delivery: initialData?.date_delivery
       ? new Date(initialData.date_delivery).toISOString().split('T')[0]
       : '',
-    customer_id: initialData?.customer_id || '',
+    customer_id: initialData?.customer_id ? Number(initialData.customer_id) : 0,
     amount: initialData?.amount || 0,
     additional_info: initialData?.additional_info || '',
-    product_id: initialData?.product_id || ''
+    product_id: initialData?.product_id ? Number(initialData.product_id) : 0
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -96,8 +95,8 @@ export default function OrderForm({
                   <FormItem>
                     <FormLabel>Product</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      value={field.value.toString()}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -105,16 +104,14 @@ export default function OrderForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='gelb'>Gelb</SelectItem>
-                        <SelectItem value='rot'>Rot</SelectItem>
-                        <SelectItem value='gruen'>Grün</SelectItem>
-                        <SelectItem value='blau'>Blau</SelectItem>
-                        <SelectItem value='gold'>Gold</SelectItem>
-                        <SelectItem value='international'>
-                          International
-                        </SelectItem>
-                        <SelectItem value='salat'>Salatplatte</SelectItem>
-                        <SelectItem value='kalt'>
+                        <SelectItem value='1'>Gelb</SelectItem>
+                        <SelectItem value='2'>Rot</SelectItem>
+                        <SelectItem value='3'>Grün</SelectItem>
+                        <SelectItem value='4'>Blau</SelectItem>
+                        <SelectItem value='5'>Gold</SelectItem>
+                        <SelectItem value='6'>International</SelectItem>
+                        <SelectItem value='7'>Salatplatte</SelectItem>
+                        <SelectItem value='8'>
                           Kaltplatte oder Süßspeise
                         </SelectItem>
                       </SelectContent>
@@ -130,8 +127,8 @@ export default function OrderForm({
                   <FormItem>
                     <FormLabel>Customer</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      value={field.value.toString()}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -139,9 +136,9 @@ export default function OrderForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='customer1'>Customer 1</SelectItem>
-                        <SelectItem value='customer2'>Customer 2</SelectItem>
-                        <SelectItem value='customer3'>Customer 3</SelectItem>
+                        <SelectItem value='1'>Customer 1</SelectItem>
+                        <SelectItem value='2'>Customer 2</SelectItem>
+                        <SelectItem value='3'>Customer 3</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -159,7 +156,11 @@ export default function OrderForm({
                         type='number'
                         placeholder='Enter amount'
                         value={field.value}
-                        onChange={field.onChange}
+                        onChange={(e) => {
+                          const value =
+                            e.target.value === '' ? 0 : Number(e.target.value);
+                          field.onChange(value);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
