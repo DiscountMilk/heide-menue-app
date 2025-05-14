@@ -155,3 +155,228 @@ export const fakeProducts = {
 
 // Initialize sample products
 fakeProducts.initialize();
+
+//TODO ab hier ist Working
+
+import { customer, orders, products } from './data';
+
+export interface Order {
+  id: number;
+  date_created: string;
+  date_delivery: string;
+  customer_id: number;
+  amount: number;
+  additional_info: string;
+  product_id: number;
+}
+
+export interface Products {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+}
+
+export interface Customer {
+  id: number;
+  customer_id: number;
+  name: string;
+  adress: string;
+  phone: string;
+  payment_method: string;
+  orders: number[];
+  invoices: number[];
+}
+
+export const fakeDatabase = {
+  customers: [] as Customer[],
+  orders: [] as Order[],
+  products: [] as Products[],
+
+  // Initialize with sample data
+  initialize() {
+    this.customers = customer;
+    this.orders = orders;
+    this.products = products;
+  },
+
+  // Get all customers with optional search
+  async getCustomers({ search }: { search?: string }) {
+    await delay(500); // Simulate delay
+    let result = [...this.customers];
+
+    if (search) {
+      result = matchSorter(result, search, {
+        keys: ['name', 'adress', 'phone']
+      });
+    }
+
+    return result;
+  },
+
+  // Get a specific customer by their ID
+  async getCustomerById(id: number) {
+    await delay(500); // Simulate a delay
+
+    // Find the customer by their ID
+    const customer = this.customers.find((customer) => customer.id === id);
+
+    if (!customer) {
+      return {
+        success: false,
+        message: `Customer with ID ${id} not found`
+      };
+    }
+
+    // Mock current time
+    const currentTime = new Date().toISOString();
+
+    return {
+      success: true,
+      time: currentTime,
+      message: `Customer with ID ${id} found`,
+      customer
+    };
+  },
+  // Get paginated customers
+  async getPaginatedCustomers({
+    page = 1,
+    limit = 10,
+    search
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    const allCustomers = await this.getCustomers({ search });
+    const totalCustomers = allCustomers.length;
+
+    const offset = (page - 1) * limit;
+    const paginatedCustomers = allCustomers.slice(offset, offset + limit);
+
+    return {
+      success: true,
+      total_customers: totalCustomers,
+      customers: paginatedCustomers
+    };
+  },
+
+  // Get paginated orders
+  async getPaginatedOrders({
+    page = 1,
+    limit = 10,
+    search
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    await delay(500); // Simulate delay
+    let allOrders = [...this.orders];
+
+    // Optional search functionality (if needed)
+    if (search) {
+      allOrders = matchSorter(allOrders, search, {
+        keys: ['id', 'customer_id'] // Adjust keys based on searchable fields
+      });
+    }
+
+    const totalOrders = allOrders.length;
+
+    // Pagination logic
+    const offset = (page - 1) * limit;
+    const paginatedOrders = allOrders.slice(offset, offset + limit);
+
+    return {
+      success: true,
+      total_orders: totalOrders,
+      orders: paginatedOrders
+    };
+  },
+
+  // Get all customers with optional search
+  async getOrders({ search }: { search?: string }) {
+    await delay(500); // Simulate delay
+    let result = [...this.orders];
+
+    if (search) {
+      result = matchSorter(result, search, {
+        keys: ['date_delivery', 'customer_id', 'product_id']
+      });
+    }
+
+    return result;
+  },
+
+  // Get a specific order by its ID
+  async getOrderById(id: number) {
+    await delay(500); // Simulate a delay
+
+    // Find the order by its ID
+    const order = this.orders.find((order) => order.id === id);
+
+    if (!order) {
+      return {
+        success: false,
+        message: `Order with ID ${id} not found`
+      };
+    }
+
+    // Mock current time
+    const currentTime = new Date().toISOString();
+
+    return {
+      success: true,
+      time: currentTime,
+      message: `Order with ID ${id} found`,
+      order
+    };
+  },
+
+  // Get all orders for a specific customer
+  async getOrdersByCustomerId(customerId: number) {
+    await delay(500); // Simulate delay
+    return this.orders.filter((order) => order.customer_id === customerId);
+  },
+
+  // Get all products for a specific order
+  async getProductsByOrderId(orderId: number) {
+    await delay(500); // Simulate delay
+    const order = this.orders.find((o) => o.id === orderId);
+    if (!order) {
+      return [];
+    }
+
+    return this.products.filter((product) =>
+      order.product_id.includes(product.id)
+    );
+  },
+
+  // Get all products with optional search and category filtering
+  async getProducts({
+    search,
+    category
+  }: {
+    search?: string;
+    category?: string;
+  }) {
+    await delay(500); // Simulate delay
+    let result = [...this.products];
+
+    if (category) {
+      result = result.filter((product) => product.category === category);
+    }
+
+    if (search) {
+      result = matchSorter(result, search, {
+        keys: ['name', 'description', 'category']
+      });
+    }
+
+    return result;
+  }
+};
+
+// Initialize the database
+fakeDatabase.initialize();
