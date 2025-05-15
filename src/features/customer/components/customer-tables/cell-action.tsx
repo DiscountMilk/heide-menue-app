@@ -1,4 +1,7 @@
 'use client';
+
+import { supabase } from '@/utils/supabase/client';
+
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,7 +30,29 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      console.log('Form submitted:', data);
+
+      const { error: deleteError } = await supabase
+        .from('customer')
+        .delete()
+        .eq('id', data.id);
+
+      if (deleteError) {
+        console.error('Error deleting data:', deleteError.message);
+        alert('Fehler löschen des Kunden: ' + deleteError.message);
+        return;
+      }
+
+      console.log('Data deleted successfully:', data);
+      setOpen(false);
+      router.refresh();
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('Ein unerwarteter Fehler ist aufgetreten.');
+    }
+  };
 
   return (
     <>
