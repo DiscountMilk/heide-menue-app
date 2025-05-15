@@ -49,7 +49,7 @@ export default function CustomerForm({
     name: initialData?.name || '',
     adress: initialData?.adress || '',
     phone: initialData?.phone || '',
-    payment_method: initialData?.phone || 1
+    payment_method: Number(initialData?.phone) || 1
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
