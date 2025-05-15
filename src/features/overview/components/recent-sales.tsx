@@ -6,16 +6,12 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
-import { createClient } from '@/utils/supabase/server';
+import { supabase } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 
 const salesData = [1, 2, 3, 4];
 
 export async function RecentSales() {
-  // Remove the await before cookies()
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   // Fetch all data from the customer table
   const { data: customers, error } = await supabase
     .from('customer')

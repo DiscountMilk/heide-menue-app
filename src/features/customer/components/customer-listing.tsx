@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
+import { supabase } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { searchParamsCache } from '@/lib/searchparams';
 import { CustomerTable } from './customer-tables';
@@ -7,9 +7,6 @@ import { columns } from './customer-tables/columns';
 type CustomerListingPage = {};
 
 export default async function CustomerListingPage({}: CustomerListingPage) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   // Get search params
   const pageParam = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
