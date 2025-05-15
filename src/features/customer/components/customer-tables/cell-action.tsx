@@ -9,7 +9,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Customer } from '@/constants/data';
-import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconDotsVertical,
+  IconTrash,
+  IconCash
+} from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -46,6 +51,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             onClick={() => router.push(`/dashboard/customer/${data.id}`)}
           >
             <IconEdit className='mr-2 h-4 w-4' /> Bearbeiten
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`/dashboard/customer/${data.id}`)}
+          >
+            <IconCash className='mr-2 h-4 w-4' /> Bestellung anlegen
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <IconTrash className='mr-2 h-4 w-4' /> Löschen

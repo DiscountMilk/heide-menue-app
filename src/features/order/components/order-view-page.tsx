@@ -1,6 +1,7 @@
 import { fakeDatabase, Order } from '@/constants/mock-api';
 import { notFound } from 'next/navigation';
 import OrderForm from './order-form';
+import OrderCalendarWeekMenu from './order-calendar-week-menu';
 
 type TOrderViewPageProps = {
   orderId: string;
@@ -19,5 +20,10 @@ export default async function OrderViewPage({ orderId }: TOrderViewPageProps) {
     pageTitle = `Edit Order`;
   }
 
-  return <OrderForm initialData={order} pageTitle={pageTitle} />;
+  return (
+    <>
+      <OrderForm initialData={order} pageTitle={pageTitle} />
+      <OrderCalendarWeekMenu />
+    </>
+  );
 }
