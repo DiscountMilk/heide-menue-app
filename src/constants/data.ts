@@ -166,34 +166,29 @@ export const products: Products[] = [
 
 export interface Customer {
   id: number;
-  customer_id: number;
   name: string;
   adress: string;
   phone: string;
   payment_method: string;
-  orders: number[];
-  invoices: number[];
+  additional_info?: string;
+  orders?: number[];
 }
 
 export const customer: Customer[] = [
   {
     id: 1,
-    customer_id: 1,
     name: 'John Doe',
     adress: '123 Main St, Springfield, IL',
     phone: '+1 (555) 123-4567',
     payment_method: 'Credit Card',
-    orders: [1, 2],
-    invoices: [1]
+    orders: [1, 2]
   },
   {
     id: 2,
-    customer_id: 2,
     name: 'Jane Smith',
     adress: '456 Elm St, Springfield, IL',
     phone: '+1 (555) 987-6543',
     payment_method: 'PayPal',
-    orders: [3],
-    invoices: [2]
+    orders: [3]
   }
 ];

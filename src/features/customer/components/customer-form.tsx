@@ -1,5 +1,7 @@
 'use client';
 
+import { supabase } from '@/utils/supabase/client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -30,7 +32,8 @@ const formSchema = z.object({
   }),
   adress: z.string(),
   phone: z.string(),
-  payment_method: z.string()
+  payment_method: z.number(),
+  additional_info: z.string().optional()
 });
 
 export default function CustomerForm({
@@ -41,10 +44,12 @@ export default function CustomerForm({
   pageTitle: string;
 }) {
   const defaultValues = {
+    id: initialData?.id || '',
+    additional_info: initialData?.additional_info || '',
     name: initialData?.name || '',
     adress: initialData?.adress || '',
     phone: initialData?.phone || '',
-    payment_method: initialData?.phone || ''
+    payment_method: initialData?.phone || 1
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,9 +57,35 @@ export default function CustomerForm({
     values: defaultValues
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Form submission logic would be implemented here
-    //TODO: Implement form submission logic
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      console.log('Form submitted:', values);
+
+      const { data, error } = await supabase
+        .from('customer')
+        .insert([
+          {
+            name: values.name,
+            adress: values.adress,
+            phone: values.phone,
+            payment_method: values.payment_method,
+            additional_info: values.additional_info
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.error('Error inserting data:', error.message);
+        alert('Fehler beim Hinzufügen des Kunden: ' + error.message);
+        return;
+      }
+
+      console.log('Data inserted successfully:', data);
+      alert('Kunde erfolgreich hinzugefügt!');
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('Ein unerwarteter Fehler ist aufgetreten.');
+    }
   }
 
   return (
@@ -114,8 +145,8 @@ export default function CustomerForm({
                   <FormItem>
                     <FormLabel>Payment Method</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value[field.value.length - 1]}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      value={String(field.value)}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -123,13 +154,24 @@ export default function CustomerForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='cash'>Cash</SelectItem>
-                        <SelectItem value='ueberweisung'>
-                          Überweisung
-                        </SelectItem>
-                        <SelectItem value='lastschrift'>Lastschrift</SelectItem>
+                        <SelectItem value='1'>Cash</SelectItem>
+                        <SelectItem value='2'>Überweisung</SelectItem>
+                        <SelectItem value='3'>Lastschrift</SelectItem>
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='additional_info'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Additional Information</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder='Enter Text' {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

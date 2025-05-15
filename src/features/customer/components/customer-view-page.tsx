@@ -10,7 +10,7 @@ export default async function CustomerViewPage({
   customerId
 }: TCustomerViewPageProps) {
   let customer = null;
-  let pageTitle = 'Neuen Kunden anlegen';
+  let pageTitle = 'Create new customer';
 
   if (customerId !== 'new') {
     const data = await fakeDatabase.getCustomerById(Number(customerId));
@@ -18,7 +18,7 @@ export default async function CustomerViewPage({
     if (!customer) {
       notFound();
     }
-    pageTitle = `Kunden bearbeiten`;
+    pageTitle = `Edit customer ${customerId}`;
   }
 
   return <CustomerForm initialData={customer} pageTitle={pageTitle} />;

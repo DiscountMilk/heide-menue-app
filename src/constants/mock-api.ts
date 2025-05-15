@@ -180,13 +180,12 @@ export interface Products {
 
 export interface Customer {
   id: number;
-  customer_id: number;
   name: string;
   adress: string;
   phone: string;
   payment_method: string;
-  orders: number[];
-  invoices: number[];
+  additional_info?: string;
+  orders?: number[];
 }
 
 export const fakeDatabase = {
