@@ -11,14 +11,14 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
   const supabase = createClient(cookieStore);
 
   // Get search params
-  const pageParam = searchParamsCache.get('page' as string);
-  const search = searchParamsCache.get('name' as string);
-  const pageLimitParam = searchParamsCache.get('perPage' as string);
-  const categories = searchParamsCache.get('category' as string);
+  const pageParam = searchParamsCache.get('page');
+  const search = searchParamsCache.get('name');
+  const pageLimitParam = searchParamsCache.get('perPage');
+  const categories = searchParamsCache.get('category');
 
   // Parse pagination parameters with defaults
-  const page = pageParam ? parseInt(pageParam) : 1;
-  const limit = pageLimitParam ? parseInt(pageLimitParam) : 10;
+  const page = pageParam ? parseInt(String(pageParam)) : 1;
+  const limit = pageLimitParam ? parseInt(String(pageLimitParam)) : 10;
 
   // Calculate offset for pagination
   const from = (page - 1) * limit;
