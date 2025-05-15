@@ -183,7 +183,7 @@ export interface Customer {
   name: string;
   adress: string;
   phone: string;
-  payment_method: string;
+  payment_method: number;
   additional_info?: string;
   orders?: number[];
 }
