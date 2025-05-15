@@ -169,7 +169,7 @@ export interface Customer {
   name: string;
   adress: string;
   phone: string;
-  payment_method: string;
+  payment_method: number;
   additional_info?: string;
   orders?: number[];
 }
@@ -180,7 +180,7 @@ export const customer: Customer[] = [
     name: 'John Doe',
     adress: '123 Main St, Springfield, IL',
     phone: '+1 (555) 123-4567',
-    payment_method: 'Credit Card',
+    payment_method: 1,
     orders: [1, 2]
   },
   {
@@ -188,7 +188,7 @@ export const customer: Customer[] = [
     name: 'Jane Smith',
     adress: '456 Elm St, Springfield, IL',
     phone: '+1 (555) 987-6543',
-    payment_method: 'PayPal',
+    payment_method: 2,
     orders: [3]
   }
 ];
