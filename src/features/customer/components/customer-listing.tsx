@@ -27,7 +27,20 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
 
   // Apply single search across multiple fields
   if (search) {
-    query = query.ilike('name', `%${search}%`);
+    const isNumeric = /^\d+$/.test(search);
+
+    const conditions = [
+      `phone.ilike.%${search}%`,
+      `adress.ilike.%${search}%`,
+      `name.ilike.%${search}%`
+    ];
+
+    if (isNumeric) {
+      // ID als zusätzliches ODER-Kriterium einbauen
+      conditions.push(`id.eq.${search}`);
+    }
+
+    query = query.or(conditions.join(','));
   }
 
   // Add pagination
@@ -35,6 +48,8 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
 
   // Execute the query
   const { data: customers, count: totalCustomer, error } = await query;
+
+  console.log('Customers:', customers);
 
   if (error) {
     console.error('Error fetching customers:', error);
