@@ -15,7 +15,7 @@ export default async function ProductViewPage({
 
   if (productId !== 'new') {
     const { data, error } = await supabase
-      .from('product')
+      .from('products')
       .select('*')
       .eq('id', productId)
       .single();
