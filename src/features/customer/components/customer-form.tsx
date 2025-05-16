@@ -21,10 +21,12 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Customer } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Customer, paymentMethods } from '@/constants/data';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -57,6 +59,26 @@ export default function CustomerForm({
     values: defaultValues
   });
 
+  const router = useRouter();
+  const [paymentMethods, setPaymentMethods] = useState<
+    { id: number; name: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      const { data, error } = await supabase
+        .from('payment_methods')
+        .select('*');
+      if (error) {
+        console.error('Error fetching payment methods:', error);
+        return;
+      }
+      setPaymentMethods(data);
+    };
+
+    fetchPaymentMethods();
+  }, []);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       console.log('Form submitted:', values);
@@ -76,12 +98,12 @@ export default function CustomerForm({
 
       if (error) {
         console.error('Error inserting data:', error.message);
-        alert('Fehler beim Hinzufügen des Kunden: ' + error.message);
         return;
       }
 
       console.log('Data inserted successfully:', data);
-      alert('Kunde erfolgreich hinzugefügt!');
+      router.refresh();
+      router.push('/dashboard/customer');
     } catch (err) {
       console.error('Unexpected error:', err);
       alert('Ein unerwarteter Fehler ist aufgetreten.');
@@ -150,13 +172,15 @@ export default function CustomerForm({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select categories' />
+                          <SelectValue placeholder='Select Payment Method' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='1'>Cash</SelectItem>
-                        <SelectItem value='2'>Überweisung</SelectItem>
-                        <SelectItem value='3'>Lastschrift</SelectItem>
+                        {paymentMethods.map((method) => (
+                          <SelectItem key={method.id} value={String(method.id)}>
+                            {method.method}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />

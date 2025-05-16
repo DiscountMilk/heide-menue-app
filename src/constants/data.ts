@@ -164,12 +164,17 @@ export const products: Products[] = [
   }
 ];
 
+export interface paymentMethods {
+  id: number;
+  method: string;
+}
+
 export interface Customer {
   id: number;
   name: string;
   adress: string;
   phone: string;
-  payment_method: number;
+  payment_method: paymentMethods['id'];
   additional_info?: string;
   orders?: number[];
 }
