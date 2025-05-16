@@ -1,5 +1,4 @@
 import { supabase } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import { searchParamsCache } from '@/lib/searchparams';
 import { CustomerTable } from './customer-tables';
 import { columns } from './customer-tables/columns';
@@ -23,19 +22,12 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
 
   // Start building the query
   let query = supabase
-    .from('customer')
-    .select('*, payment_methods(method)', { count: 'exact' });
+    .from('customer_with_payment_method')
+    .select('*', { count: 'exact' });
 
-  // Add search filter if provided
+  // Apply single search across multiple fields
   if (search) {
-    query = query.or(
-      `name.ilike.%${search}%, adress.ilike.%${search}%, phone.ilike.%${search}%, id.ilike.%${search}%`
-    );
-  }
-
-  // Add category filter if provided
-  if (categories) {
-    query = query.eq('category', categories);
+    query = query.ilike('name', `%${search}%`);
   }
 
   // Add pagination

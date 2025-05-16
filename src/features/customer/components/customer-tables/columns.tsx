@@ -15,27 +15,27 @@ export const columns: ColumnDef<Customer>[] = [
     cell: ({ cell }) => <div>{cell.getValue<Customer['name']>()}</div>,
     meta: {
       label: 'Name',
-      placeholder: 'Suchen ...',
+      placeholder: 'Search ...',
       variant: 'text',
       icon: Text
     },
     enableColumnFilter: true
   },
   {
-    accessorKey: 'adress',
-    header: 'ADRESSE'
-  },
-  {
     accessorKey: 'id',
     header: 'ID'
   },
   {
+    accessorKey: 'adress',
+    header: 'ADRESS'
+  },
+  {
     accessorKey: 'phone',
-    header: 'TELEFONNUMMER'
+    header: 'PHONE NUMBER'
   },
   {
     accessorKey: 'method',
-    header: 'BEZAHLMETHODE'
+    header: 'PAYMENT METHOD'
   },
 
   {

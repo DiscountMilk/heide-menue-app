@@ -75,15 +75,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/customer/${data.id}`)}
           >
-            <IconEdit className='mr-2 h-4 w-4' /> Bearbeiten
+            <IconEdit className='mr-2 h-4 w-4' /> Edit
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/customer/${data.id}`)}
           >
-            <IconCash className='mr-2 h-4 w-4' /> Bestellung anlegen
+            <IconCash className='mr-2 h-4 w-4' /> Create Order
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <IconTrash className='mr-2 h-4 w-4' /> Löschen
+            <IconTrash className='mr-2 h-4 w-4' /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

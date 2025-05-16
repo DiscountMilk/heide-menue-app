@@ -31,13 +31,13 @@ export default async function Page(props: pageProps) {
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
-          <Heading title='Kunden' description='Übersicht über alle Kunden' />
+          <Heading title='Customer' description='Overview all Customer' />
           <Link
             href='/dashboard/customer/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
             <IconPlus className='mr-2 h-4 w-4' />
-            Anlegen
+            Add New Customer
           </Link>
         </div>
         <Separator />

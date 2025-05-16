@@ -51,12 +51,12 @@ export default function CustomerForm({
     name: initialData?.name || '',
     adress: initialData?.adress || '',
     phone: initialData?.phone || '',
-    payment_method: Number(initialData?.phone) || 1
+    payment_method: Number(initialData?.payment_method) || 1
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    values: defaultValues
+    defaultValues: defaultValues
   });
 
   const router = useRouter();
@@ -83,25 +83,52 @@ export default function CustomerForm({
     try {
       console.log('Form submitted:', values);
 
-      const { data, error } = await supabase
-        .from('customer')
-        .insert([
-          {
+      // Check if we're updating an existing customer or creating a new one
+      if (initialData?.id) {
+        // Update existing customer
+        const { data, error } = await supabase
+          .from('customer')
+          .update({
             name: values.name,
             adress: values.adress,
             phone: values.phone,
             payment_method: values.payment_method,
             additional_info: values.additional_info
-          }
-        ])
-        .select();
+          })
+          .eq('id', initialData.id)
+          .select();
 
-      if (error) {
-        console.error('Error inserting data:', error.message);
-        return;
+        if (error) {
+          console.error('Error updating data:', error.message);
+          alert('Error updating customer: ' + error.message);
+          return;
+        }
+
+        console.log('Data updated successfully:', data);
+      } else {
+        // Insert new customer
+        const { data, error } = await supabase
+          .from('customer')
+          .insert([
+            {
+              name: values.name,
+              adress: values.adress,
+              phone: values.phone,
+              payment_method: values.payment_method,
+              additional_info: values.additional_info
+            }
+          ])
+          .select();
+
+        if (error) {
+          console.error('Error inserting data:', error.message);
+          alert('Error creating customer: ' + error.message);
+          return;
+        }
+
+        console.log('Data inserted successfully:', data);
       }
 
-      console.log('Data inserted successfully:', data);
       router.refresh();
       router.push('/dashboard/customer');
     } catch (err) {
@@ -201,7 +228,9 @@ export default function CustomerForm({
                 )}
               />
             </div>
-            <Button type='submit'>Add Customer</Button>
+            <Button type='submit'>
+              {initialData?.id ? 'Update Customer' : 'Create Customer'}
+            </Button>
           </form>
         </Form>
       </CardContent>
