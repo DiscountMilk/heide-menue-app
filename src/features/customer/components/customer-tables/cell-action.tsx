@@ -78,7 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <IconEdit className='mr-2 h-4 w-4' /> Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/customer/${data.id}`)}
+            onClick={() => router.push(`/dashboard/orders/new`)}
           >
             <IconCash className='mr-2 h-4 w-4' /> Create Order
           </DropdownMenuItem>
