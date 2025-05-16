@@ -12,6 +12,7 @@ import { Product } from '@/constants/data';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { supabase } from '@/utils/supabase/client';
 
 interface CellActionProps {
   data: Product;
@@ -22,7 +23,29 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      console.log('Form submitted:', data);
+
+      const { error: deleteError } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', data.id);
+
+      if (deleteError) {
+        console.error('Error deleting data:', deleteError.message);
+        alert('Fehler löschen des Produkts: ' + deleteError.message);
+        return;
+      }
+
+      console.log('Data deleted successfully:', data);
+      setOpen(false);
+      router.refresh();
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('Ein unerwarteter Fehler ist aufgetreten.');
+    }
+  };
 
   return (
     <>

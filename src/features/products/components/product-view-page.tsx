@@ -1,6 +1,7 @@
-import { fakeProducts, Product } from '@/constants/mock-api';
+import { Product } from '@/constants/data';
 import { notFound } from 'next/navigation';
 import ProductForm from './product-form';
+import { supabase } from '@/utils/supabase/server';
 
 type TProductViewPageProps = {
   productId: string;
@@ -13,12 +14,18 @@ export default async function ProductViewPage({
   let pageTitle = 'Create New Product';
 
   if (productId !== 'new') {
-    const data = await fakeProducts.getProductById(Number(productId));
-    product = data.product as Product;
-    if (!product) {
+    const { data, error } = await supabase
+      .from('product')
+      .select('*')
+      .eq('id', productId)
+      .single();
+
+    if (error || !data) {
+      console.error('Error fetching Product:', error);
       notFound();
     }
-    pageTitle = `Edit Product`;
+    product = data as Product;
+    pageTitle = `Edit Product ${productId}`;
   }
 
   return <ProductForm initialData={product} pageTitle={pageTitle} />;

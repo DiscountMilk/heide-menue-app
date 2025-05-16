@@ -10,7 +10,6 @@ export default async function CustomerListingPage({}: CustomerListingPage) {
   const pageParam = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
   const pageLimitParam = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
 
   // Parse pagination parameters with defaults
   const page = pageParam ? parseInt(String(pageParam)) : 1;
