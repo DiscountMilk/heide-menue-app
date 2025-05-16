@@ -26,7 +26,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Customer, paymentMethods } from '@/constants/data';
+import { Customer } from '@/constants/data';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -61,7 +61,7 @@ export default function CustomerForm({
 
   const router = useRouter();
   const [paymentMethods, setPaymentMethods] = useState<
-    { id: number; name: string }[]
+    { id: number; method: string }[]
   >([]);
 
   useEffect(() => {
