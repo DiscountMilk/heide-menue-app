@@ -35,25 +35,17 @@ const formSchema = z.object({
   product_id: z.number()
 });
 
-export default function OrderForm(initCustomer: Customer) {
-  const [customer, setCustomers] = useState<Customer>();
+type OrderFormProps = {
+  customer?: Customer;
+  order?: Order;
+  pageTitle: string;
+};
 
-  useEffect(() => {
-    const fetchCustomer = async () => {
-      const { data, error } = await supabase
-        .from('customer_with_payment_method')
-        .select('*')
-        .eq('id', initCustomer.id)
-        .single();
-      if (error) {
-        console.error('Error fetching payment methods:', error);
-        return;
-      }
-      setCustomers(data);
-    };
-    fetchCustomer();
-  }, []);
-
+export default function OrderForm({
+  customer,
+  order,
+  pageTitle
+}: OrderFormProps) {
   return (
     <Card className='mx-auto w-full'>
       <CardHeader>

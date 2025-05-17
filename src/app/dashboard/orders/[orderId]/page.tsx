@@ -7,15 +7,25 @@ export const metadata = {
   title: 'Dashboard : Order View'
 };
 
-type PageProps = { params: Promise<{ orderId: string }> };
+type PageProps = {
+  params: Promise<{ orderId: string }>;
+  searchParams: Promise<{ customerId: string }>;
+};
 
-export default async function Page(props: PageProps) {
-  const params = await props.params;
+export default async function Page({ params, searchParams }: PageProps) {
+  const resolvedParams = await params;
+  const { orderId } = resolvedParams;
+
+  const resolvedSearchParams = await searchParams;
+  const { customerId } = resolvedSearchParams;
+
+  console.log('Page', { orderId, customerId });
+
   return (
     <PageContainer scrollable>
       <div className='flex-1 space-y-4'>
         <Suspense fallback={<FormCardSkeleton />}>
-          <OrderViewPage orderId={params.orderId} />
+          <OrderViewPage orderId={orderId} customerId={customerId} />
         </Suspense>
       </div>
     </PageContainer>
