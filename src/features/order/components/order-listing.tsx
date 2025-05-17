@@ -1,5 +1,4 @@
 import { Customer, Order } from '@/constants/data';
-import { fakeDatabase } from '@/constants/mock-api';
 import { searchParamsCache } from '@/lib/searchparams';
 import { OrderTable } from './order-tables';
 import { columns } from '@/features/order/components/order-tables/columns';
@@ -20,9 +19,8 @@ export default async function OrderListingPage({}: OrderListingPage) {
     ...(categories && { categories: categories })
   };
 
-  const data = await fakeDatabase.getPaginatedOrders(filters);
-  const totalOrders = data.total_orders;
-  const orders: Order[] = data.orders;
+  const totalOrders = 100;
+  const orders: Order[] = [];
 
   return (
     <OrderTable data={orders} totalItems={totalOrders} columns={columns} />

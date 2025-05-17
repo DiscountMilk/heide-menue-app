@@ -1,16 +1,5 @@
 import { NavItem } from '@/types';
 
-export type Product = {
-  photo_url: string;
-  name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
-};
-
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
 export const navItems: NavItem[] = [
   {
@@ -47,59 +36,6 @@ export const navItems: NavItem[] = [
   }
 ];
 
-export interface SaleUser {
-  id: number;
-  name: string;
-  email: string;
-  amount: string;
-  image: string;
-  initials: string;
-}
-
-export const recentSalesData: SaleUser[] = [
-  {
-    id: 1,
-    name: 'Olivia Martin',
-    email: 'olivia.martin@email.com',
-    amount: '+$1,999.00',
-    image: 'https://api.slingacademy.com/public/sample-users/1.png',
-    initials: 'OM'
-  },
-  {
-    id: 2,
-    name: 'Jackson Lee',
-    email: 'jackson.lee@email.com',
-    amount: '+$39.00',
-    image: 'https://api.slingacademy.com/public/sample-users/2.png',
-    initials: 'JL'
-  },
-  {
-    id: 3,
-    name: 'Isabella Nguyen',
-    email: 'isabella.nguyen@email.com',
-    amount: '+$299.00',
-    image: 'https://api.slingacademy.com/public/sample-users/3.png',
-    initials: 'IN'
-  },
-  {
-    id: 4,
-    name: 'William Kim',
-    email: 'will@email.com',
-    amount: '+$99.00',
-    image: 'https://api.slingacademy.com/public/sample-users/4.png',
-    initials: 'WK'
-  },
-  {
-    id: 5,
-    name: 'Sofia Davis',
-    email: 'sofia.davis@email.com',
-    amount: '+$39.00',
-    image: 'https://api.slingacademy.com/public/sample-users/5.png',
-    initials: 'SD'
-  }
-];
-
-//TODO ab hier ist Working
 export interface Order {
   id: number;
   date_created: string;
@@ -140,37 +76,11 @@ export const orders: Order[] = [
   }
 ];
 
-export interface Products {
+export interface Product {
   id: number;
   name: string;
-  category: string;
-  description: string;
   price: number;
 }
-
-export const products: Products[] = [
-  {
-    id: 1,
-    name: 'Product 1',
-    category: 'Gold',
-    description: 'Description of Product 1',
-    price: 100
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    category: 'Rot',
-    description: 'Description of Product 2',
-    price: 200
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    category: 'Blau',
-    description: 'Description of Product 3',
-    price: 300
-  }
-];
 
 export interface paymentMethods {
   id: number;
