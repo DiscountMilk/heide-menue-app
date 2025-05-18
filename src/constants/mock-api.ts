@@ -9,7 +9,7 @@ export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 // Define the shape of Product data
-export type Product = {
+export type MockProduct = {
   photo_url: string;
   name: string;
   description: string;
@@ -22,12 +22,12 @@ export type Product = {
 
 // Mock product data store
 export const fakeProducts = {
-  records: [] as Product[], // Holds the list of product objects
+  records: [] as MockProduct[], // Holds the list of product objects
 
   // Initialize with sample data
   initialize() {
-    const sampleProducts: Product[] = [];
-    function generateRandomProductData(id: number): Product {
+    const sampleProducts: MockProduct[] = [];
+    function generateRandomProductData(id: number): MockProduct {
       const categories = [
         'Electronics',
         'Furniture',

@@ -42,7 +42,13 @@ const formSchema = z.object({
   date_delivery: z.date(),
   customer_id: z.number(),
   price: z.number().min(1),
-  product_id: z.number()
+  orderProducts: z.array(
+    z.object({
+      product_id: z.number(),
+      amount: z.number().min(1),
+      price: z.number().min(1)
+    })
+  )
 });
 
 type OrderFormProps = {
@@ -50,11 +56,47 @@ type OrderFormProps = {
   order?: Order;
 };
 
+type OrderProduct = {
+  product_id: number;
+  price: number;
+};
+
 export default function OrderForm({ customerId, order }: OrderFormProps) {
+  const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<DateRange>({
     from: startOfWeek(new Date(), { weekStartsOn: 1 }),
     to: endOfWeek(new Date(), { weekStartsOn: 1 })
+  });
+
+  const weekdays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      date_delivery: new Date(),
+      customer_id: customerId,
+      price: 0,
+      orderProducts: []
+    }
+  });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('name');
+
+      if (error) {
+        console.error('Error fetching products:', error);
+      } else {
+        setProducts(data);
+      }
+    };
+
+    fetchProducts();
   });
 
   const handleSelect = (range: DateRange | undefined) => {
