@@ -79,7 +79,8 @@ export const orders: Order[] = [
 export interface Product {
   id: number;
   name: string;
-  price: number;
+  sales_price: number;
+  purchase_price: number;
 }
 
 export interface paymentMethods {

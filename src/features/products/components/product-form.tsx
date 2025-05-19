@@ -22,7 +22,10 @@ const formSchema = z.object({
   name: z
     .string()
     .min(2, { message: 'Product name must be at least 2 characters.' }),
-  price: z.coerce
+  sales_price: z.coerce
+    .number()
+    .min(0, { message: 'Price must be a positive number.' }),
+  purchase_price: z.coerce
     .number()
     .min(0, { message: 'Price must be a positive number.' })
 });
@@ -36,7 +39,8 @@ export default function ProductForm({
 }) {
   const defaultValues = {
     name: initialData?.name || '',
-    price: initialData?.price || 0
+    sales_price: initialData?.sales_price || 0,
+    purchase_price: initialData?.purchase_price || 0
   };
 
   const router = useRouter();
@@ -57,7 +61,8 @@ export default function ProductForm({
           .from('products')
           .update({
             name: values.name,
-            price: values.price
+            sales_price: values.sales_price,
+            purchase_price: values.purchase_price
           })
           .eq('id', initialData.id)
           .select();
@@ -76,7 +81,8 @@ export default function ProductForm({
           .insert([
             {
               name: values.name,
-              price: values.price
+              sales_price: values.sales_price,
+              purchase_price: values.purchase_price
             }
           ])
           .select();
@@ -108,7 +114,7 @@ export default function ProductForm({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            <div className='space-y-6'>
               <FormField
                 control={form.control}
                 name='name'
@@ -124,10 +130,28 @@ export default function ProductForm({
               />
               <FormField
                 control={form.control}
-                name='price'
+                name='sales_price'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Sales Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        step='0.01'
+                        placeholder='Enter price'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='purchase_price'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Purchase Price</FormLabel>
                     <FormControl>
                       <Input
                         type='number'
