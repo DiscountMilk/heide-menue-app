@@ -42,39 +42,10 @@ export interface Order {
   date_delivery: string;
   customer_id: number;
   amount: number;
-  additional_info: string;
   product_id: number;
+  sales_price: number;
+  purchase_price: number;
 }
-
-export const orders: Order[] = [
-  {
-    id: 1,
-    date_created: '2023-10-01',
-    date_delivery: '2023-10-05',
-    customer_id: 1,
-    amount: 100,
-    additional_info: 'Please deliver before noon.',
-    product_id: 1
-  },
-  {
-    id: 2,
-    date_created: '2023-10-02',
-    date_delivery: '2023-10-06',
-    customer_id: 2,
-    amount: 200,
-    additional_info: 'Leave at the front door.',
-    product_id: 2
-  },
-  {
-    id: 3,
-    date_created: '2023-10-03',
-    date_delivery: '2023-10-07',
-    customer_id: 1,
-    amount: 300,
-    additional_info: 'Call me when you arrive.',
-    product_id: 3
-  }
-];
 
 export interface Product {
   id: number;

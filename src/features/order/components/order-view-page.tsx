@@ -1,13 +1,13 @@
 import { Order, Customer } from '@/constants/data';
 import { notFound } from 'next/navigation';
-import OrderForm from './order-form';
+import OrderFormNewWeek from './order-form-new-week';
 import { supabase } from '@/utils/supabase/server';
 import OrderCustomerShortView from '@/features/order/components/order-customer-short-view';
 
 type TOrderViewPageProps = { customerId?: string; orderId?: string };
 
 export default async function OrderViewPage(props: TOrderViewPageProps) {
-  let pageTitle = 'Create new Order';
+  let pageTitle = 'Order';
   let order = null;
 
   console.log('OrderViewPage', props.customerId);
@@ -31,7 +31,7 @@ export default async function OrderViewPage(props: TOrderViewPageProps) {
   return (
     <>
       <OrderCustomerShortView customer={customer} pageTitle={pageTitle} />
-      <OrderForm order={order || undefined} customerId={customer.id} />
+      <OrderFormNewWeek order={order || undefined} customerId={customer.id} />
     </>
   );
 }
